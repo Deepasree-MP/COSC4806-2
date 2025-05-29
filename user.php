@@ -1,50 +1,56 @@
 <?php
-require_once('database.php');
+require_once "database.php";
 
-Class User{
-  public function get_all_users() {
-    $db = db_connect();
-    $statement = $db->prepare("SELECT * FROM users;");
-    $statement->execute();
-    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-    return $rows;
-  }
+class User
+{
+    private $db;
 
-  public function create_user($username, $password) {
+    public function __construct()
+    {
+        $this->db = db_connect();
+    }
 
-  if ($this->user_exists($username)) {
-    throw new Exception("Username already exists.");
-  }
+    public function get_all_users()
+    {
+        $statement = $this->db->prepare("SELECT * FROM users;");
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-  $db = db_connect();
-  $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    public function create_user($username, $password)
+    {
+        if ($this->user_exists($username)) {
+            throw new Exception("Username already exists.");
+        }
 
-  $statement = $db->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
-  $statement->bindParam(':username', $username);
-  $statement->bindParam(':password', $hashed_password);
-  $statement->execute();
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $statement = $this->db->prepare(
+            "INSERT INTO users (username, password) VALUES (:username, :password)"
+        );
+        $statement->bindParam(":username", $username);
+        $statement->bindParam(":password", $hashed_password);
+        $statement->execute();
 
-  return $db->lastInsertId();
-  }
+        return $this->db->lastInsertId();
+    }
 
-  //Check if a username already exists
-  public function user_exists($username) {
-    $db = db_connect();
-    $statement = $db->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
-    $statement->bindParam(':username', $username);
-    $statement->execute();
-    $count = $statement->fetchColumn();
-    return $count > 0;
-  }
+    public function user_exists($username)
+    {
+        $statement = $this->db->prepare(
+            "SELECT COUNT(*) FROM users WHERE username = :username"
+        );
+        $statement->bindParam(":username", $username);
+        $statement->execute();
+        return $statement->fetchColumn() > 0;
+    }
 
-public function get_user_by_username($username) {
-    $db = db_connect();
-    $stmt = $db->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
-    $stmt->bindParam(':username', $username);
-    $stmt->execute();
-    return $stmt->fetch(PDO::FETCH_ASSOC); // Returns one user or false
+    public function get_user_by_username($username)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM users WHERE username = :username LIMIT 1"
+        );
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
-
-
-}
-?>  

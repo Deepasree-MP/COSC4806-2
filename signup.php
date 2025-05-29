@@ -1,5 +1,5 @@
 <?php
-require_once('user.php'); 
+require_once "user.php";
 
 $message = "";
 
@@ -16,10 +16,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             $user = new User();
             if ($user->user_exists($username)) {
-                $message = "<span style='color:red;'>Account cannot be created. Username already exists.</span>";
+                $message =
+                    "<span style='color:red;'>Account cannot be created. Username already exists.</span>";
             } else {
                 $user_id = $user->create_user($username, $password);
-                $message = "Account created successfully. Your user ID is $user_id. <br><a href='login.php'>Click here to login</a>";
+                $message = "Account created successfully. Your user ID is $user_id.
+<br><a href='login.php'>Click here to login</a>";
             }
         } catch (Exception $e) {
             $message = "Error: " . $e->getMessage();
@@ -28,26 +30,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Sign Up</title>
 </head>
 <body>
-<h2>Create an Account</h2>
-<form method="post" action="">
-    <label>Username:</label><br>
-    <input type="text" name="username" ><br><br>
+    <h2>Create an Account</h2>
+    <form method="post" action="">
+        <label>Username:</label><br>
+        <input type="text" name="username"><br><br>
 
-    <label>Password:</label><br>
-    <input type="password" name="password" ><br><br>
+        <label>Password:</label><br>
+        <input type="password" name="password"><br><br>
 
-    <label>Confirm Password:</label><br>
-    <input type="password" name="confirm_password" ><br><br>
+        <label>Confirm Password:</label><br>
+        <input type="password" name="confirm_password"><br><br>
 
-    <input type="submit" value="Create Account">
-</form>
+        <input type="submit" value="Create Account">
+    </form>
 
-<p><?php echo $message; ?></p>
+    <p><?php echo $message; ?></p>
 </body>
 </html>
