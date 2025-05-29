@@ -15,8 +15,8 @@ $_SESSION["authenticated"] = 0;
 $user = new User();
 $matchedUser = $user->get_user_by_username($username);
 
-$storedHash = $matchedUser["password"];
-/*if (password_verify($password, $storedHash)) {
+/*$storedHash = $matchedUser["password"];
+if (password_verify($password, $storedHash)) {
     echo "Password match with hash password in db";
 } else {
     echo "given password did not match with hash password in db";
