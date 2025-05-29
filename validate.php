@@ -1,16 +1,28 @@
 <?php
 
 session_start();
+require_once('user.php');
 
 $valid_username = "deepasree";
 $valid_password = "password";
 
 $username = $_REQUEST['username'];
-$_SESSION['username'] = $username;
 $password = $_REQUEST['password'];
+
+$_SESSION['username'] = $username;
 $_SESSION['authenticated'] = 0;
 
-if ($valid_username == $username && $valid_password == $password ) {
+$user = new User();
+$matchedUser = $user->get_user_by_username($username);
+
+$storedHash = $matchedUser['password'];
+/*if (password_verify($password, $storedHash)) {
+    echo "Password match with hash password in db";
+} else {
+    echo "given password did not match with hash password in db";
+}*/
+
+if ($matchedUser && password_verify($password, $matchedUser['password'])) {
 
     $_SESSION['authenticated'] = 1;
     header ('location: /');

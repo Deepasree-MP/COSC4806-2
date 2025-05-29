@@ -37,6 +37,14 @@ Class User{
     return $count > 0;
   }
 
+public function get_user_by_username($username) {
+    $db = db_connect();
+    $stmt = $db->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
+    $stmt->bindParam(':username', $username);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC); // Returns one user or false
+}
+
 
 }
 ?>  

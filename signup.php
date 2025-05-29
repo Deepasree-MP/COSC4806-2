@@ -15,8 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         try {
             $user = new User();
-            $user_id = $user->create_user($username, $password);
-            $message = "Account created successfully. Your user ID is $user_id.";
+            if ($user->user_exists($username)) {
+                $message = "<span style='color:red;'>Account cannot be created. Username already exists.</span>";
+            } else {
+                $user_id = $user->create_user($username, $password);
+                $message = "Account created successfully. Your user ID is $user_id. <br><a href='login.php'>Click here to login</a>";
+            }
         } catch (Exception $e) {
             $message = "Error: " . $e->getMessage();
         }
@@ -33,13 +37,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h2>Create an Account</h2>
 <form method="post" action="">
     <label>Username:</label><br>
-    <input type="text" name="username" required><br><br>
+    <input type="text" name="username" ><br><br>
 
     <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+    <input type="password" name="password" ><br><br>
 
     <label>Confirm Password:</label><br>
-    <input type="password" name="confirm_password" required><br><br>
+    <input type="password" name="confirm_password" ><br><br>
 
     <input type="submit" value="Create Account">
 </form>
